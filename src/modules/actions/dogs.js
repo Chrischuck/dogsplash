@@ -12,7 +12,32 @@ export const fetchDogs = function*() {
     const response = yield call(fetch, 'https://dog.ceo/api/breeds/image/random/12')
     const payload = yield response.json()
 
-    yield put(fetchDogsSuccess(payload.message))
+    const images = payload.message
+    const imageColOne = []
+    const imageColTwo = []
+    const imageColThree = []
+
+    let counter = 1
+    images.forEach((image) => {
+      if (counter === 1) {
+        imageColOne.push(image)
+      } else if (counter === 2) {
+        imageColTwo.push(image)
+      } else {
+        imageColThree.push(image)
+        counter = 1
+        return
+      }
+      counter += 1
+    })
+
+    const data = {
+      imageColOne,
+      imageColTwo,
+      imageColThree
+    }
+
+    yield put(fetchDogsSuccess(data))
   } catch(err) {
     yield put(fetchDogsFailure(err))
   }
